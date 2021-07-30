@@ -145,6 +145,7 @@ import im.vector.app.features.spaces.create.ChooseSpaceTypeFragment
 import im.vector.app.features.spaces.create.CreateSpaceDefaultRoomsFragment
 import im.vector.app.features.spaces.create.CreateSpaceDetailsFragment
 import im.vector.app.features.spaces.explore.SpaceDirectoryFragment
+import im.vector.app.features.spaces.leave.SpaceLeaveAdvancedFragment
 import im.vector.app.features.spaces.manage.SpaceAddRoomFragment
 import im.vector.app.features.spaces.manage.SpaceManageRoomsFragment
 import im.vector.app.features.spaces.manage.SpaceSettingsFragment
@@ -822,4 +823,9 @@ interface FragmentModule {
     @IntoMap
     @FragmentKey(RoomJoinRuleChooseRestrictedFragment::class)
     fun bindRoomJoinRuleChooseRestrictedFragment(fragment: RoomJoinRuleChooseRestrictedFragment): Fragment
+
+    @Binds
+    @IntoMap
+    @FragmentKey(SpaceLeaveAdvancedFragment::class)
+    fun bindSpaceLeaveAdvancedFragment(fragment: SpaceLeaveAdvancedFragment): Fragment
 }
