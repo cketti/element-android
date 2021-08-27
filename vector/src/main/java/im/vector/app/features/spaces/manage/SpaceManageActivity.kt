@@ -98,7 +98,8 @@ class SpaceManageActivity : VectorBaseActivity<ActivitySimpleLoadingBinding>(),
         if (isFirstCreation()) {
             withState(sharedViewModel) {
                 when (it.manageType) {
-                    ManageType.AddRooms -> {
+                    ManageType.AddRooms,
+                    ManageType.AddRoomsOnlySpaces -> {
                         val simpleName = SpaceAddRoomFragment::class.java.simpleName
                         if (supportFragmentManager.findFragmentByTag(simpleName) == null) {
                             supportFragmentManager.commitTransaction {
@@ -145,6 +146,13 @@ class SpaceManageActivity : VectorBaseActivity<ActivitySimpleLoadingBinding>(),
                             R.id.simpleFragmentContainer,
                             CreateRoomFragment::class.java,
                             CreateRoomArgs("", parentSpaceId = args?.spaceId)
+                    )
+                }
+                SpaceManagedSharedViewEvents.NavigateToCreateSpace -> {
+                    addFragmentToBackstack(
+                            R.id.simpleFragmentContainer,
+                            CreateRoomFragment::class.java,
+                            CreateRoomArgs("", parentSpaceId = args?.spaceId, isSubSpace = true)
                     )
                 }
                 SpaceManagedSharedViewEvents.NavigateToManageRooms -> {

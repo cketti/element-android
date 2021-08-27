@@ -43,6 +43,7 @@ import im.vector.app.features.home.room.detail.timeline.TimelineEventController
 import im.vector.app.features.matrixto.SpaceCardRenderer
 import im.vector.app.features.permalink.PermalinkHandler
 import im.vector.app.features.spaces.manage.ManageType
+import im.vector.app.features.spaces.manage.SpaceAddRoomSpaceChooserBottomSheet
 import im.vector.app.features.spaces.manage.SpaceManageActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -72,6 +73,27 @@ class SpaceDirectoryFragment @Inject constructor(
             FragmentSpaceDirectoryBinding.inflate(layoutInflater, container, false)
 
     private val viewModel by activityViewModel(SpaceDirectoryViewModel::class)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        childFragmentManager.setFragmentResultListener(SpaceAddRoomSpaceChooserBottomSheet.REQUEST_KEY, this) { _, bundle ->
+
+            bundle.getString(SpaceAddRoomSpaceChooserBottomSheet.BUNDLE_KEY_ACTION)?.let { action ->
+                val spaceId = withState(viewModel) { it.spaceId }
+                when (action) {
+                    SpaceAddRoomSpaceChooserBottomSheet.ACTION_ADD_ROOMS  -> {
+                        addExistingRoomActivityResult.launch(SpaceManageActivity.newIntent(requireContext(), spaceId, ManageType.AddRooms))
+                    }
+                    SpaceAddRoomSpaceChooserBottomSheet.ACTION_ADD_SPACES -> {
+                        addExistingRoomActivityResult.launch(SpaceManageActivity.newIntent(requireContext(), spaceId, ManageType.AddRoomsOnlySpaces))
+                    }
+                    else                                                  -> {
+                        // nop
+                    }
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -167,7 +189,7 @@ class SpaceDirectoryFragment @Inject constructor(
     }
 
     override fun addExistingRooms(spaceId: String) {
-        addExistingRoomActivityResult.launch(SpaceManageActivity.newIntent(requireContext(), spaceId, ManageType.AddRooms))
+        SpaceAddRoomSpaceChooserBottomSheet.newInstance(spaceId).show(childFragmentManager, "SpaceAddRoomSpaceChooserBottomSheet")
     }
 
     override fun onUrlClicked(url: String, title: String): Boolean {

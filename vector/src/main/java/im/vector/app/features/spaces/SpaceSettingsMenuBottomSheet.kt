@@ -35,7 +35,6 @@ import im.vector.app.features.home.AvatarRenderer
 import im.vector.app.features.navigation.Navigator
 import im.vector.app.features.powerlevel.PowerLevelsObservableFactory
 import im.vector.app.features.rageshake.BugReporter
-import im.vector.app.features.rageshake.ReportType
 import im.vector.app.features.roomprofile.RoomProfileActivity
 import im.vector.app.features.session.coroutineScope
 import im.vector.app.features.settings.VectorPreferences
@@ -117,6 +116,7 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
 
                     views.invitePeople.isVisible = canInvite || roomSummary?.isPublic.orFalse()
                     views.addRooms.isVisible = canAddChild
+                    views.addSpaces.isVisible = canAddChild
 
                     val isAdmin = powerLevelsHelper.getUserRole(session.myUserId) is Role.Admin
                     val otherAdminCount = roomSummary?.otherMemberIds
@@ -125,10 +125,6 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
                             ?: 0
                     isLastAdmin = isAdmin && otherAdminCount == 0
                 }.disposeOnDestroyView()
-
-        views.spaceBetaTag.debouncedClicks {
-            bugReporter.openBugReportScreen(requireActivity(), ReportType.SPACE_BETA_FEEDBACK)
-        }
 
         views.invitePeople.views.bottomSheetActionClickableZone.debouncedClicks {
             dismiss()
@@ -151,6 +147,11 @@ class SpaceSettingsMenuBottomSheet : VectorBaseBottomSheetDialogFragment<BottomS
         views.addRooms.views.bottomSheetActionClickableZone.debouncedClicks {
             dismiss()
             startActivity(SpaceManageActivity.newIntent(requireActivity(), spaceArgs.spaceId, ManageType.AddRooms))
+        }
+
+        views.addSpaces.views.bottomSheetActionClickableZone.debouncedClicks {
+            dismiss()
+            startActivity(SpaceManageActivity.newIntent(requireActivity(), spaceArgs.spaceId, ManageType.AddRoomsOnlySpaces))
         }
 
         views.leaveSpace.views.bottomSheetActionClickableZone.debouncedClicks {
